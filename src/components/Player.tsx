@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
-const Player: React.FC<{ initialName: string; symbol: string }> = ({
-  initialName,
-  symbol,
-}) => {
+const Player: React.FC<{
+  initialName: string;
+  symbol: string;
+  isActive: boolean;
+  onChangeName: (symbol: string, name: string) => void;
+}> = ({ initialName, symbol, isActive, onChangeName }) => {
   const [playerName, setPlayerName] = useState(initialName);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -11,6 +13,9 @@ const Player: React.FC<{ initialName: string; symbol: string }> = ({
     // best practice: pass a function into setState when updating based on the previous state
     // this is because react schedules state updates
     setIsEditing((editing) => !editing);
+    if (isEditing) {
+      onChangeName(symbol, playerName);
+    }
   }
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -18,7 +23,7 @@ const Player: React.FC<{ initialName: string; symbol: string }> = ({
   }
 
   return (
-    <li>
+    <li className={isActive ? "active" : undefined}>
       <span className="player">
         {/* two-way binding */}
         {isEditing && (
